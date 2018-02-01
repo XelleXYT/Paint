@@ -6,6 +6,7 @@
 package codigo;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -113,6 +114,11 @@ public class VentanaPaint extends javax.swing.JFrame {
 		new VentanaPaint().setVisible(true);
 	    }
 	});
+    }
+    
+    @Override
+    public void paint(Graphics g){
+	super.paint(g);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
