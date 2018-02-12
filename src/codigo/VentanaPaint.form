@@ -241,6 +241,9 @@
           <Dimension value="[36, 36]"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jToggleButton3MousePressed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
