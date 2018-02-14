@@ -29,7 +29,7 @@ public class Triangulo extends Polygon {
 	ypoints[2] = _posY + _altura;
 
 	//Calcualamos la mitad de la base
-	int mediaBase = (int) (_altura / Math.tan(Math.toRadians(60)));
+	int mediaBase = (int) (_altura / Math.sin(Math.toRadians(60)));
 
 	//Asigna los valores para X iguales a la distancia con el medio del triangulo
 	xpoints[1] = _posX + mediaBase;
@@ -49,7 +49,7 @@ public class Triangulo extends Polygon {
 	ypoints[2] = _posY + altura;
 
 	//Calcualamos la mitad de la base
-	int mediaBase = (int) (altura / Math.tan(Math.toRadians(60)));
+	int mediaBase = (int) (altura / Math.sin(Math.toRadians(60)));
 
 	//Asigna los valores para X iguales a la distancia con el medio del triangulo
 	xpoints[1] = xpoints[0] + mediaBase;
