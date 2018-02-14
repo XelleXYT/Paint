@@ -6,10 +6,11 @@
 package codigo;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import javax.swing.JToggleButton;
 
 /**
  *
@@ -18,12 +19,9 @@ import java.awt.image.BufferedImage;
 public class VentanaPaint extends javax.swing.JFrame {
 
     BufferedImage buffer, buffer2 = null;
-    Circulo circulo;
-    Cuadrado cuadrado;
-    Triangulo triangulo;
-    Pentagono pentagono;
+    Forma miForma;
     Color colorSeleccionado = Color.black; //Color por defecto
-    int formaSeleccionada = 0; //Selector de forma
+    int formaSeleccionada = 3; //Selector de forma
     Graphics2D bufferGraphics, buffer2Graphics, jPanelGraphics = null;
 
     /**
@@ -56,6 +54,22 @@ public class VentanaPaint extends javax.swing.JFrame {
 	buffer2Graphics.fillRect(0, 0, buffer2.getWidth(), buffer2.getHeight());
 	//Inicializa jPanelGraphics
 	jPanelGraphics = (Graphics2D) jPanel1.getGraphics();
+    }
+
+    @Override
+    public void paint(Graphics g) {
+	super.paint(g);
+	// Pinta el buffer sobre el jFrame
+	jPanelGraphics.drawImage(buffer, 0, 0, null);
+    }
+
+    private void deSelecciona() {
+	Component[] components = (Component[]) getContentPane().getComponents();
+	for (Component comp : components) {
+	    if (comp instanceof JToggleButton) {
+		((JToggleButton) comp).setSelected(false);
+	    }
+	}
     }
 
     /**
@@ -206,7 +220,7 @@ public class VentanaPaint extends javax.swing.JFrame {
         });
 
         jToggleButton4.setFont(new java.awt.Font("Dialog", 1, 8)); // NOI18N
-        jToggleButton4.setText("T");
+        jToggleButton4.setText("P");
         jToggleButton4.setMaximumSize(new java.awt.Dimension(36, 36));
         jToggleButton4.setMinimumSize(new java.awt.Dimension(36, 36));
         jToggleButton4.setPreferredSize(new java.awt.Dimension(36, 36));
@@ -267,57 +281,29 @@ public class VentanaPaint extends javax.swing.JFrame {
 	// Sobreescribe el lienzo
 	bufferGraphics.drawImage(buffer2, 0, 0, null);
 	// Dibuja la forma
-	switch (formaSeleccionada) {
-	    case 0:
-		circulo.dibujate(bufferGraphics, evt.getX(), evt.getY());
-		break;
-	    case 1:
-		cuadrado.dibujate(bufferGraphics, evt.getX(), evt.getY());
-		break;
-	    case 2:
-		triangulo.dibujate(bufferGraphics, evt.getX(), evt.getY());
-		break;
-	    case 3:
-		pentagono.dibujate(bufferGraphics, evt.getX(), evt.getY());
-		break;
-	}
+	miForma.dibujate(bufferGraphics, evt.getX(), evt.getY());
 	repaint(0, 0, 1, 1);
     }//GEN-LAST:event_jPanel1MouseDragged
 
     private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
 	// Inicializa la forma que se usara para dibujar en el buffer
 	switch (formaSeleccionada) {
-	    case 0:
-		circulo = new Circulo(evt.getX(), evt.getY(), 1, colorSeleccionado, jCheckBox1.isSelected());
+	    case 5000:
+		miForma = new Circulo(evt.getX(), evt.getY(), colorSeleccionado, jCheckBox1.isSelected());
 		break;
-	    case 1:
-		cuadrado = new Cuadrado(evt.getX(), evt.getY(), 1, colorSeleccionado, jCheckBox1.isSelected());
-		break;
-	    case 2:
-		triangulo = new Triangulo(evt.getX(), evt.getY(), 1, colorSeleccionado, jCheckBox1.isSelected());
-		break;
+	    //case 1: cuadrado = new Cuadrado(evt.getX(), evt.getY(), 1, colorSeleccionado, jCheckBox1.isSelected()); break;
 	    case 3:
-		pentagono = new Pentagono(evt.getX(), evt.getY(), 1, colorSeleccionado, jCheckBox1.isSelected());
+		miForma = new Triangulo(evt.getX(), evt.getY(), colorSeleccionado, jCheckBox1.isSelected());
+		break;
+	    case 5:
+		miForma = new Pentagono(evt.getX(), evt.getY(), colorSeleccionado, jCheckBox1.isSelected());
 		break;
 	}
     }//GEN-LAST:event_jPanel1MousePressed
 
     private void jPanel1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseReleased
 	// Dibuja la forma
-	switch (formaSeleccionada) {
-	    case 0:
-		circulo.dibujate(buffer2Graphics, evt.getX(), evt.getY());
-		break;
-	    case 1:
-		cuadrado.dibujate(buffer2Graphics, evt.getX(), evt.getY());
-		break;
-	    case 2:
-		triangulo.dibujate(buffer2Graphics, evt.getX(), evt.getY());
-		break;
-	    case 3:
-		pentagono.dibujate(buffer2Graphics, evt.getX(), evt.getY());
-		break;
-	}
+	miForma.dibujate(buffer2Graphics, evt.getX(), evt.getY());
     }//GEN-LAST:event_jPanel1MouseReleased
 
     private void jButton2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MousePressed
@@ -336,34 +322,27 @@ public class VentanaPaint extends javax.swing.JFrame {
 
     private void jToggleButton1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton1MousePressed
 	//Selecciona la forma circulo
-	formaSeleccionada = 0;
-	jToggleButton2.setSelected(false);
-	jToggleButton3.setSelected(false);
-	jToggleButton4.setSelected(false);
+	formaSeleccionada = 5000;
+	deSelecciona();
+
     }//GEN-LAST:event_jToggleButton1MousePressed
 
     private void jToggleButton2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton2MousePressed
 	//Selecciona la forma cuadrado
-	formaSeleccionada = 1;
-	jToggleButton1.setSelected(false);
-	jToggleButton3.setSelected(false);
-	jToggleButton4.setSelected(false);
+	formaSeleccionada = 4;
+	deSelecciona();
     }//GEN-LAST:event_jToggleButton2MousePressed
 
     private void jToggleButton3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton3MousePressed
 	//Selecciona la forma triangulo
-	formaSeleccionada = 2;
-	jToggleButton1.setSelected(false);
-	jToggleButton2.setSelected(false);
-	jToggleButton4.setSelected(false);
+	formaSeleccionada = 3;
+	deSelecciona();
     }//GEN-LAST:event_jToggleButton3MousePressed
 
     private void jToggleButton4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton4MousePressed
-	//Selecciona la forma triangulo
-	formaSeleccionada = 3;
-	jToggleButton1.setSelected(false);
-	jToggleButton2.setSelected(false);
-	jToggleButton3.setSelected(false);
+	//Selecciona la forma pentagono
+	formaSeleccionada = 5;
+	deSelecciona();
     }//GEN-LAST:event_jToggleButton4MousePressed
 
     /**
@@ -399,13 +378,6 @@ public class VentanaPaint extends javax.swing.JFrame {
 		new VentanaPaint().setVisible(true);
 	    }
 	});
-    }
-
-    @Override
-    public void paint(Graphics g) {
-	super.paint(g);
-	// Pinta el buffer sobre el jFrame
-	jPanelGraphics.drawImage(buffer, 0, 0, null);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
