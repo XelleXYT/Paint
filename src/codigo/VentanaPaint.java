@@ -10,6 +10,10 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JToggleButton;
 
 /**
@@ -86,6 +90,7 @@ public class VentanaPaint extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jDialog2 = new javax.swing.JDialog();
+        jFileChooser1 = new javax.swing.JFileChooser();
         jPanel1 = new javax.swing.JPanel();
         jCheckBox1 = new javax.swing.JCheckBox();
         jLabel2 = new javax.swing.JLabel();
@@ -146,11 +151,17 @@ public class VentanaPaint extends javax.swing.JFrame {
         jDialog2.getContentPane().setLayout(jDialog2Layout);
         jDialog2Layout.setHorizontalGroup(
             jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1113, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialog2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jFileChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 537, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jDialog2Layout.setVerticalGroup(
             jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 513, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialog2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jFileChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -261,6 +272,11 @@ public class VentanaPaint extends javax.swing.JFrame {
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem1.setText("Guardar");
+        jMenuItem1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jMenuItem1MousePressed(evt);
+            }
+        });
         jMenu1.add(jMenuItem1);
 
         jMenuBar1.add(jMenu1);
@@ -395,6 +411,22 @@ public class VentanaPaint extends javax.swing.JFrame {
 	deSelecciona();
     }//GEN-LAST:event_jToggleButton5MousePressed
 
+    private void jMenuItem1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem1MousePressed
+        int seleccion = jFileChooser1.showSaveDialog(this);
+        if (seleccion == JFileChooser.APPROVE_OPTION){
+            //Botón de guardar presionado en cualquier JFileChooser
+            File fichero = jFileChooser1.getSelectedFile();
+            String nombre = fichero.getName();
+            String extension = nombre.substring(nombre.lastIndexOf('.')+1);
+            if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("png")){
+                try{
+                    ImageIO.write(buffer, extension, fichero);
+                }catch(IOException e){
+                }
+            }
+        }
+    }//GEN-LAST:event_jMenuItem1MousePressed
+
     /**
      * @param args the command line arguments
      */
@@ -437,6 +469,7 @@ public class VentanaPaint extends javax.swing.JFrame {
     private javax.swing.JColorChooser jColorChooser1;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JDialog jDialog2;
+    private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
