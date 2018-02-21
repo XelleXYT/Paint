@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JToggleButton;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -33,48 +34,52 @@ public class VentanaPaint extends javax.swing.JFrame {
      * Creates new form VentanaPaint
      */
     public VentanaPaint() {
-	initComponents();
-	jPanel2.setBackground(colorSeleccionado);
-	jToggleButton1.setSelected(true);
-	inicializaBuffers();
-	jDialog1.setSize(678, 439);
+        initComponents();
+        jPanel2.setBackground(colorSeleccionado);
+        jToggleButton1.setSelected(true);
+        inicializaBuffers();
+        jDialog1.setSize(678, 439);
+        FileNameExtensionFilter jpg = new FileNameExtensionFilter("JPG", "jpg");
+        FileNameExtensionFilter png = new FileNameExtensionFilter("PNG", "png");
+        jFileChooser1.setFileFilter(jpg);
+        jFileChooser1.setFileFilter(png);
     }
 
     private void inicializaBuffers() {
-	//Crea una imagen del mismo ancho y alto que el lienzo
-	buffer = (BufferedImage) jPanel1.createImage(jPanel1.getWidth(), jPanel1.getHeight());
-	//Crea una imagen modificable
-	bufferGraphics = buffer.createGraphics();
-	//Inicializa el buffer para que sea un rectangulo que ocupe todo el jPanel
-	bufferGraphics.setColor(Color.white);
-	bufferGraphics.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
+        //Crea una imagen del mismo ancho y alto que el lienzo
+        buffer = (BufferedImage) jPanel1.createImage(jPanel1.getWidth(), jPanel1.getHeight());
+        //Crea una imagen modificable
+        bufferGraphics = buffer.createGraphics();
+        //Inicializa el buffer para que sea un rectangulo que ocupe todo el jPanel
+        bufferGraphics.setColor(Color.white);
+        bufferGraphics.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
 
-	//Inicializa buffer2
-	//Crea una imagen del mismo ancho y alto que el lienzo
-	buffer2 = (BufferedImage) jPanel1.createImage(jPanel1.getWidth(), jPanel1.getHeight());
-	//Modifica la imagen modificable
-	buffer2Graphics = buffer2.createGraphics();
-	//Inicializa el buffer para que sea un rectangulo que ocupe todo el jPanel
-	buffer2Graphics.setColor(Color.white);
-	buffer2Graphics.fillRect(0, 0, buffer2.getWidth(), buffer2.getHeight());
-	//Inicializa jPanelGraphics
-	jPanelGraphics = (Graphics2D) jPanel1.getGraphics();
+        //Inicializa buffer2
+        //Crea una imagen del mismo ancho y alto que el lienzo
+        buffer2 = (BufferedImage) jPanel1.createImage(jPanel1.getWidth(), jPanel1.getHeight());
+        //Modifica la imagen modificable
+        buffer2Graphics = buffer2.createGraphics();
+        //Inicializa el buffer para que sea un rectangulo que ocupe todo el jPanel
+        buffer2Graphics.setColor(Color.white);
+        buffer2Graphics.fillRect(0, 0, buffer2.getWidth(), buffer2.getHeight());
+        //Inicializa jPanelGraphics
+        jPanelGraphics = (Graphics2D) jPanel1.getGraphics();
     }
 
     @Override
     public void paint(Graphics g) {
-	super.paint(g);
-	// Pinta el buffer sobre el jFrame
-	jPanelGraphics.drawImage(buffer, 0, 0, null);
+        super.paint(g);
+        // Pinta el buffer sobre el jFrame
+        jPanelGraphics.drawImage(buffer, 0, 0, null);
     }
 
     private void deSelecciona() {
-	Component[] components = (Component[]) getContentPane().getComponents();
-	for (Component comp : components) {
-	    if (comp instanceof JToggleButton) {
-		((JToggleButton) comp).setSelected(false);
-	    }
-	}
+        Component[] components = (Component[]) getContentPane().getComponents();
+        for (Component comp : components) {
+            if (comp instanceof JToggleButton) {
+                ((JToggleButton) comp).setSelected(false);
+            }
+        }
     }
 
     /**
@@ -91,6 +96,7 @@ public class VentanaPaint extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jDialog2 = new javax.swing.JDialog();
+        jFileChooser1 = new javax.swing.JFileChooser();
         jPanel1 = new javax.swing.JPanel();
         jCheckBox1 = new javax.swing.JCheckBox();
         jLabel2 = new javax.swing.JLabel();
@@ -103,6 +109,7 @@ public class VentanaPaint extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         jDialog1.setResizable(false);
 
@@ -146,6 +153,8 @@ public class VentanaPaint extends javax.swing.JFrame {
                     .addComponent(jButton1))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
+
+        jDialog2.getContentPane().add(jFileChooser1, java.awt.BorderLayout.CENTER);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -267,6 +276,20 @@ public class VentanaPaint extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem1);
 
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem2.setText("Cargar");
+        jMenuItem2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jMenuItem2MousePressed(evt);
+            }
+        });
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
         jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
@@ -322,139 +345,162 @@ public class VentanaPaint extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jPanel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseDragged
-	// Sobreescribe el lienzo
-	bufferGraphics.drawImage(buffer2, 0, 0, null);
-	// Dibuja la forma
-	miForma.dibujate(bufferGraphics, evt.getX(), evt.getY());
-	repaint(0, 0, 1, 1);
+        // Sobreescribe el lienzo
+        bufferGraphics.drawImage(buffer2, 0, 0, null);
+        // Dibuja la forma
+        miForma.dibujate(bufferGraphics, evt.getX(), evt.getY());
+        repaint(0, 0, 1, 1);
     }//GEN-LAST:event_jPanel1MouseDragged
 
     private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
-	// Inicializa la forma que se usara para dibujar en el buffer
-	switch (formaSeleccionada) {
-	    case 5000:
-		miForma = new Circulo(evt.getX(), evt.getY(), colorSeleccionado, jCheckBox1.isSelected());
-		break;
-	    case 4:
-		miForma = new Cuadrado(evt.getX(), evt.getY(), colorSeleccionado, jCheckBox1.isSelected());
-		break;
-	    case 3:
-		miForma = new Triangulo(evt.getX(), evt.getY(), colorSeleccionado, jCheckBox1.isSelected());
-		break;
-	    case 5:
-		miForma = new Pentagono(evt.getX(), evt.getY(), colorSeleccionado, jCheckBox1.isSelected());
-		break;
-	    case 24:
-		miForma = new Estrella(evt.getX(), evt.getY(), colorSeleccionado, jCheckBox1.isSelected());
-		break;
-	}
+        // Inicializa la forma que se usara para dibujar en el buffer
+        switch (formaSeleccionada) {
+            case 5000:
+                miForma = new Circulo(evt.getX(), evt.getY(), colorSeleccionado, jCheckBox1.isSelected());
+                break;
+            case 4:
+                miForma = new Cuadrado(evt.getX(), evt.getY(), colorSeleccionado, jCheckBox1.isSelected());
+                break;
+            case 3:
+                miForma = new Triangulo(evt.getX(), evt.getY(), colorSeleccionado, jCheckBox1.isSelected());
+                break;
+            case 5:
+                miForma = new Pentagono(evt.getX(), evt.getY(), colorSeleccionado, jCheckBox1.isSelected());
+                break;
+            case 24:
+                miForma = new Estrella(evt.getX(), evt.getY(), colorSeleccionado, jCheckBox1.isSelected());
+                break;
+        }
     }//GEN-LAST:event_jPanel1MousePressed
 
     private void jPanel1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseReleased
-	// Dibuja la forma
-	miForma.dibujate(buffer2Graphics, evt.getX(), evt.getY());
+        // Dibuja la forma
+        miForma.dibujate(buffer2Graphics, evt.getX(), evt.getY());
     }//GEN-LAST:event_jPanel1MouseReleased
 
     private void jButton2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MousePressed
-	jDialog1.setVisible(false);
+        jDialog1.setVisible(false);
     }//GEN-LAST:event_jButton2MousePressed
 
     private void jButton1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MousePressed
-	jDialog1.setVisible(false);
-	colorSeleccionado = jColorChooser1.getColor();
-	jPanel2.setBackground(colorSeleccionado);
+        jDialog1.setVisible(false);
+        colorSeleccionado = jColorChooser1.getColor();
+        jPanel2.setBackground(colorSeleccionado);
     }//GEN-LAST:event_jButton1MousePressed
 
     private void jPanel2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MousePressed
-	jDialog1.setVisible(true);
+        jDialog1.setVisible(true);
     }//GEN-LAST:event_jPanel2MousePressed
 
     private void jToggleButton1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton1MousePressed
-	//Selecciona la forma circulo
-	formaSeleccionada = 5000;
-	deSelecciona();
+        //Selecciona la forma circulo
+        formaSeleccionada = 5000;
+        deSelecciona();
     }//GEN-LAST:event_jToggleButton1MousePressed
 
     private void jToggleButton2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton2MousePressed
-	//Selecciona la forma cuadrado
-	formaSeleccionada = 4;
-	deSelecciona();
+        //Selecciona la forma cuadrado
+        formaSeleccionada = 4;
+        deSelecciona();
     }//GEN-LAST:event_jToggleButton2MousePressed
 
     private void jToggleButton3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton3MousePressed
-	//Selecciona la forma triangulo
-	formaSeleccionada = 3;
-	deSelecciona();
+        //Selecciona la forma triangulo
+        formaSeleccionada = 3;
+        deSelecciona();
     }//GEN-LAST:event_jToggleButton3MousePressed
 
     private void jToggleButton4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton4MousePressed
-	//Selecciona la forma pentagono
-	formaSeleccionada = 5;
-	deSelecciona();
+        //Selecciona la forma pentagono
+        formaSeleccionada = 5;
+        deSelecciona();
     }//GEN-LAST:event_jToggleButton4MousePressed
 
     private void jToggleButton5MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton5MousePressed
         //Seleciona la forma estrella
-	formaSeleccionada = 24;
-	deSelecciona();
+        formaSeleccionada = 24;
+        deSelecciona();
     }//GEN-LAST:event_jToggleButton5MousePressed
 
     private void jMenuItem1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem1MousePressed
         int seleccion = jFileChooser1.showSaveDialog(this);
-        if (seleccion == JFileChooser.APPROVE_OPTION){
+        if (seleccion == JFileChooser.APPROVE_OPTION) {
             //Botón de guardar presionado en cualquier JFileChooser
             File fichero = jFileChooser1.getSelectedFile();
             String nombre = fichero.getName();
-            String extension = nombre.substring(nombre.lastIndexOf('.')+1);
-            if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("png")){
-                try{
+            String extension = nombre.substring(nombre.lastIndexOf('.') + 1);
+            if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("png")) {
+                try {
                     ImageIO.write(buffer, extension, fichero);
-                }catch(IOException e){
+                } catch (IOException e) {
                 }
             }
         }
     }//GEN-LAST:event_jMenuItem1MousePressed
 
     private void jMenu1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jMenu1StateChanged
-        JMenu menu = (JMenu)evt.getSource();
-	if(!menu.isSelected()){
-	    repaint();
-	}
+        JMenu menu = (JMenu) evt.getSource();
+        if (!menu.isSelected()) {
+            repaint();
+        }
     }//GEN-LAST:event_jMenu1StateChanged
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem2MousePressed
+        int seleccion = jFileChooser1.showOpenDialog(this);
+        if (seleccion == JFileChooser.APPROVE_OPTION) {
+            File fichero = jFileChooser1.getSelectedFile();
+            String nombre = fichero.getName();
+            String extension = nombre.substring(nombre.lastIndexOf('.') + 1);
+            BufferedImage imagen = null;
+            if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("png")) {
+                try {
+                    imagen = ImageIO.read(fichero);
+                    bufferGraphics.drawImage(imagen, 0, 0, null);
+                    buffer2Graphics.drawImage(imagen, 0, 0, null);
+                    repaint();
+                } catch (IOException e) {
+                }
+            }
+        }
+    }//GEN-LAST:event_jMenuItem2MousePressed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-	/* Set the Nimbus look and feel */
-	//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-	/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-	 */
-	try {
-	    for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-		if ("Nimbus".equals(info.getName())) {
-		    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-		    break;
-		}
-	    }
-	} catch (ClassNotFoundException ex) {
-	    java.util.logging.Logger.getLogger(VentanaPaint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-	} catch (InstantiationException ex) {
-	    java.util.logging.Logger.getLogger(VentanaPaint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-	} catch (IllegalAccessException ex) {
-	    java.util.logging.Logger.getLogger(VentanaPaint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-	} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-	    java.util.logging.Logger.getLogger(VentanaPaint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-	}
-	//</editor-fold>
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(VentanaPaint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(VentanaPaint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(VentanaPaint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(VentanaPaint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
 
-	/* Create and display the form */
-	java.awt.EventQueue.invokeLater(new Runnable() {
-	    public void run() {
-		new VentanaPaint().setVisible(true);
-	    }
-	});
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new VentanaPaint().setVisible(true);
+            }
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -464,10 +510,12 @@ public class VentanaPaint extends javax.swing.JFrame {
     private javax.swing.JColorChooser jColorChooser1;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JDialog jDialog2;
+    private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JToggleButton jToggleButton1;
