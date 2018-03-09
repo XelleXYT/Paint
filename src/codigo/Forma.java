@@ -6,6 +6,7 @@
 
 package codigo;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
@@ -32,7 +33,7 @@ public class Forma extends Polygon{
 	relleno = _relleno;
     }
     
-        public void dibujate(Graphics2D g2, int _posX, int _posY) {
+        public void dibujate(Graphics2D g2, int _posX, int _posY, BasicStroke _trazo) {
 	// Redibuja la forma
 	calculaVertices(y - _posY, x - _posX);
 	// Asigna el color de la forma
@@ -41,6 +42,7 @@ public class Forma extends Polygon{
 	if (relleno) {
 	    g2.fill(this);
 	} else {
+	    g2.setStroke(_trazo);
 	    g2.draw(this);
 	}
     }

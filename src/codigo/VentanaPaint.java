@@ -34,10 +34,12 @@ public class VentanaPaint extends javax.swing.JFrame {
     Forma miForma;
     Color colorSeleccionado = Color.black; //Color por defecto
     int formaSeleccionada = 5000; //Selector de forma
+    //Posiciones del lapiz
     int posLapizX = 0;
     int posLapizY = 0;
     int posLapizXX = 0;
     int posLapizYY = 0;
+    //Buffers
     Graphics2D bufferGraphics, buffer2Graphics, jPanelGraphics = null;
 
     BasicStroke trazo1 = new BasicStroke(15);
